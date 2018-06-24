@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.json.JSONArray;
@@ -91,7 +92,7 @@ public class UserControllerTest {
 
 	@Test
 	public void testGetAllUsersWithZeroUsers() throws Exception {
-		when(userService.getAll()).thenReturn(Arrays.asList());
+		when(userService.getAll()).thenReturn(new ArrayList<User>());
 		MvcResult response = mockMvc.perform(get(BASE_URL)).andReturn();
 		Assert.assertEquals(HttpStatus.OK.value(), response.getResponse().getStatus());
 		JSONArray objArray = new JSONArray(response.getResponse().getContentAsString());
@@ -103,24 +104,24 @@ public class UserControllerTest {
 	@Test
 	public void testAddUser() throws Exception {
 		User user = getSampleUser();
-		when(userService.add(Mockito.any())).thenReturn(user);
+		when(userService.add(Mockito.any(User.class))).thenReturn(user);
 		MvcResult response = mockMvc.perform(post(BASE_URL).contentType(MediaType.APPLICATION_JSON).content(asJsonString(user)))
 				.andReturn();
 		Assert.assertEquals(HttpStatus.CREATED.value(), response.getResponse().getStatus());
 		User returnedUser = getObjectFromJSONResponse(response.getResponse().getContentAsString(), User.class);
 		TestUserHelper.assertUserValues(user, returnedUser);
-		Mockito.verify(userService).add(Mockito.any());
+		Mockito.verify(userService).add(Mockito.any(User.class));
 		Mockito.verifyNoMoreInteractions(userService);
 	}
 	
 	@Test
 	public void testAddUserWithDuplicateEmail() throws Exception {
 		User user = getSampleUser();
-		when(userService.add(Mockito.any())).thenThrow(new DataIntegrityViolationException("DUPLICATE"));
+		when(userService.add(Mockito.any(User.class))).thenThrow(new DataIntegrityViolationException("DUPLICATE"));
 		MvcResult response = mockMvc.perform(post(BASE_URL).contentType(MediaType.APPLICATION_JSON).content(asJsonString(user)))
 				.andReturn();
 		Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getResponse().getStatus());
-		Mockito.verify(userService).add(Mockito.any());
+		Mockito.verify(userService).add(Mockito.any(User.class));
 		Mockito.verifyNoMoreInteractions(userService);
 	}
 	
@@ -154,24 +155,24 @@ public class UserControllerTest {
 	@Test
 	public void testUpdateUser() throws Exception {
 		User user = getSampleUser();
-		when(userService.update(Mockito.any())).thenReturn(user);
+		when(userService.update(Mockito.any(User.class))).thenReturn(user);
 		MvcResult response = mockMvc.perform(put(USER_URL).contentType(MediaType.APPLICATION_JSON).content(asJsonString(user)))
 				.andReturn();
 		Assert.assertEquals(HttpStatus.OK.value(), response.getResponse().getStatus());
 		User returnedUser = getObjectFromJSONResponse(response.getResponse().getContentAsString(), User.class);
 		TestUserHelper.assertUserValues(user, returnedUser);
-		Mockito.verify(userService).update(Mockito.any());
+		Mockito.verify(userService).update(Mockito.any(User.class));
 		Mockito.verifyNoMoreInteractions(userService);
 	}
 	
 	@Test
 	public void testUpdateUserForInvalidId() throws Exception {
 		User user = getSampleUser();
-		when(userService.update(Mockito.any())).thenThrow(new UserNotFoundException());
+		when(userService.update(Mockito.any(User.class))).thenThrow(new UserNotFoundException());
 		MvcResult response = mockMvc.perform(put(USER_URL).contentType(MediaType.APPLICATION_JSON).content(asJsonString(user)))
 				.andReturn();
 		Assert.assertEquals(HttpStatus.NOT_FOUND.value(), response.getResponse().getStatus());
-		Mockito.verify(userService).update(Mockito.any());
+		Mockito.verify(userService).update(Mockito.any(User.class));
 		Mockito.verifyNoMoreInteractions(userService);
 	}
 	
@@ -187,11 +188,11 @@ public class UserControllerTest {
 	@Test
 	public void testUpdateUserWithDuplicateEmail() throws Exception {
 		User user = getSampleUser();
-		when(userService.update(Mockito.any())).thenThrow(new DataIntegrityViolationException("DUPLICATE"));
+		when(userService.update(Mockito.any(User.class))).thenThrow(new DataIntegrityViolationException("DUPLICATE"));
 		MvcResult response = mockMvc.perform(put(USER_URL).contentType(MediaType.APPLICATION_JSON).content(asJsonString(user)))
 				.andReturn();
 		Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getResponse().getStatus());
-		Mockito.verify(userService).update(Mockito.any());
+		Mockito.verify(userService).update(Mockito.any(User.class));
 		Mockito.verifyNoMoreInteractions(userService);
 	}
 	

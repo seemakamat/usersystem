@@ -2,6 +2,7 @@ package com.example.usersystem.service;
 
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -114,7 +115,7 @@ public class UserServiceTest {
 
 	@Test
 	public void testGetAllUsersWithZeroUsers() {
-		when(userRepository.findAll()).thenReturn(Arrays.asList());
+		when(userRepository.findAll()).thenReturn(new ArrayList<User>());
 		List<User> actualUserList = userService.getAll();
 		Assert.assertEquals(0, actualUserList.size());
 	}
