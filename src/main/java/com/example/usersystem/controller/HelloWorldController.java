@@ -1,4 +1,4 @@
-package com.aws.codestar.projecttemplates.controller;
+package com.example.usersystem.controller;
 
 import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
