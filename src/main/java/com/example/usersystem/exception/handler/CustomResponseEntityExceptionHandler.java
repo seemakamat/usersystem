@@ -23,7 +23,7 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 		return new ResponseEntity(apiError, HttpStatus.BAD_REQUEST);
 	}
 
-	@ExceptionHandler
+	@ExceptionHandler(value = {UserNotFoundException.class})
 	public ResponseEntity<ApiError> handleUserNotFoundException(UserNotFoundException ex, WebRequest req) {
 		ApiError apiError = new ApiError(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.getReasonPhrase(),
 				ex.getMessage());

@@ -48,6 +48,11 @@ public class UserController {
 		return userService.get(userId);
 	}
 
+	@GetMapping(value = "/{userId}/email")
+	public String getEmail(@PathVariable Long userId) {
+		return userService.get(userId).getEmail();
+	}
+	
 	@DeleteMapping(value = "/{userId}")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public void delete(@PathVariable Long userId) {
